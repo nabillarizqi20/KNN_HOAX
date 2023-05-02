@@ -35,7 +35,7 @@ df.drop('Date', axis=1, inplace=True)
 df.drop('User', axis=1, inplace=True)
 
 # Menambahkan kolom 'label' dengan nilai default 'bukan hoax'
-df['label'] = 'bukan'
+df['label'] = 'bukan hoax'
 
 # strings_to_search = ['PBBM', 'Bahan Bakar Minyak']
 # kondisi_hoax = (df['Tweet'].str.contains('|'.join(strings_to_search), case=True))
