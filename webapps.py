@@ -24,7 +24,7 @@ hide_menu_style = """
         """
 st.markdown(hide_menu_style, unsafe_allow_html=True)
 
-st.title('KLASIFIKASI BERITA HOAX BAHAN BAKAR MINYAK MENGGUNAKAN ALGORITMA KNN')
+st.title('DETEKSI BERITA HOAX BAHAN BAKAR MINYAK MENGGUNAKAN ALGORITMA KNN')
 st.write('Masukkan tweet untuk dianalisis:')
 
 # Membaca dataset tweet dari file CSV
@@ -34,8 +34,8 @@ df.drop('Unnamed: 0', axis=1, inplace=True)
 df.drop('Date', axis=1, inplace=True)
 df.drop('User', axis=1, inplace=True)
 
-# Menambahkan kolom 'label' dengan nilai default 'non hoax'
-df['label'] = 'non hoax'
+# Menambahkan kolom 'label' dengan nilai default 'bukan hoax'
+df['label'] = 'bukan'
 
 # strings_to_search = ['PBBM', 'Bahan Bakar Minyak']
 # kondisi_hoax = (df['Tweet'].str.contains('|'.join(strings_to_search), case=True))
@@ -79,11 +79,11 @@ accuracy = accuracy_score(y_test, y_pred)
 
 # Menghitung jumlah berita hoax dan non-hoax
 num_hoax = len(df[df['label'] == 'hoax'])
-num_non_hoax = len(df[df['label'] == 'non hoax'])
+num_non_hoax = len(df[df['label'] == 'bukan hoax'])
 
 # Menghitung akurasi untuk berita hoax dan non-hoax
 hoax_indices = df[df['label'] == 'hoax'].index
-non_hoax_indices = df[df['label'] == 'non hoax'].index
+non_hoax_indices = df[df['label'] == 'bukan hoax'].index
 y_pred_hoax = knn.predict(X[hoax_indices])
 y_pred_non_hoax = knn.predict(X[non_hoax_indices])
 accuracy_hoax = accuracy_score(y[hoax_indices], y_pred_hoax)
@@ -99,7 +99,7 @@ if st.button('Analisis'):
             st.write('Hasil Analisis: Berita Hoax')
             st.write('Hasil Akurasi: {:.2f}%'.format(accuracy_hoax * 100))
         else:
-            st.write('Hasil Analisis: Non Hoax')
+            st.write('Hasil Analisis: Bukan Hoax')
             st.write('Hasil Akurasi : {:.2f}%'.format(accuracy_non_hoax * 100))
     else:
         st.warning('Masukkan tweet terlebih dahulu!')
