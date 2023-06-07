@@ -11,6 +11,19 @@ import nltk
 nltk.download('stopwords')
 nltk.download('punkt')
 
+st.set_page_config(page_icon="📰", page_title="Bahan Bakar Minyak", initial_sidebar_state="auto", layout="wide")
+
+hide_menu_style = """
+        <style>
+        footer {visibility: visible;}
+        footer:after{content:'Copyright @ 2023 Nabila Rizqi Amalia'; display:block; position:relative; color:tomato}
+        #MainMenu {visibility: hidden;}
+        header {visibility: hidden;}
+        </style>
+        """
+st.markdown(hide_menu_style, unsafe_allow_html=True)
+
+
 # Baca dataset berita
 data = pd.read_csv('dataset berita hoax dan bukan hoax.csv')
 
@@ -76,4 +89,6 @@ news_input = st.text_area("Masukkan teks berita:")
 if st.button("Deteksi"):
     result = detect_hoax(news_input)
     st.write("Hasil Deteksi: ", result)
-    st.write("Akurasi Model: ", accuracy)
+    st.write("Akurasi Model: {:.2f}% ", accuracy * 100)
+ else:
+        st.warning('Masukkan teks berita terlebih dahulu!')
