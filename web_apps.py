@@ -87,8 +87,9 @@ def detect_hoax(news_text):
 st.title("Deteksi Berita Hoax BBM dengan Metode KNN")
 news_input = st.text_area("Masukkan teks berita:")
 if st.button("Deteksi"):
-    result = detect_hoax(news_input)
-    st.write("Hasil Deteksi: ", result)
-    st.write("Akurasi Model: {:.2f}% ", accuracy * 100)
-else:
-    st.warning('Masukkan teks berita terlebih dahulu!')
+    if news_input:
+        result = detect_hoax(news_input)
+        st.write("Hasil Deteksi: ", result)
+        st.write("Akurasi Model: {:.2f}% ", accuracy * 100)
+    else:
+        st.warning('Masukkan teks berita terlebih dahulu!')
