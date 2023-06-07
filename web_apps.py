@@ -90,5 +90,5 @@ if st.button("Deteksi"):
     result = detect_hoax(news_input)
     st.write("Hasil Deteksi: ", result)
     st.write("Akurasi Model: {:.2f}% ", accuracy * 100)
- else:
-        st.warning('Masukkan teks berita terlebih dahulu!')
+else:
+    st.warning('Masukkan teks berita terlebih dahulu!')
