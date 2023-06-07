@@ -9,6 +9,7 @@ from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from nltk.corpus import stopwords
 import nltk
 nltk.download('stopwords')
+nltk.download('punkt')
 
 # Baca dataset berita
 data = pd.read_csv('dataset berita hoax dan bukan hoax.csv')
