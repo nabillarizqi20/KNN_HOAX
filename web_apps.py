@@ -7,6 +7,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from nltk.corpus import stopwords
+import nltk
+nltk.download('stopwords')
 
 # Baca dataset berita
 data = pd.read_csv('dataset berita hoax dan bukan hoax.csv')
