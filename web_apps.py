@@ -2,16 +2,19 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neighbors import KNeighborsClassifier
 import streamlit as st
+
 from nltk.tokenize import word_tokenize
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+
 from nltk.corpus import stopwords
+import time
 import nltk
 nltk.download('stopwords')
 nltk.download('punkt')
 
-st.set_page_config(page_icon="📰", page_title="Bahan Bakar Minyak", initial_sidebar_state="auto", layout="wide")
+st.set_page_config(page_icon="📰", page_title="Bahan Bakar Minyak", initial_sidebar_state="auto")
 
 hide_menu_style = """
         <style>
@@ -23,9 +26,13 @@ hide_menu_style = """
         """
 st.markdown(hide_menu_style, unsafe_allow_html=True)
 
+st.title("Deteksi Berita Hoax Bahan Bakar Minyak (BBM) Menggunakan Metode K-Nearst Neighbor")
 
 # Baca dataset berita
 data = pd.read_csv('dataset berita hoax dan bukan hoax.csv')
+
+data['Sumber'] = data['Sumber'].replace('https://www.kominfo.go.id', 'KOMINFO')
+data['Sumber'] = data['Sumber'].replace('https://www.google.com', 'KOMPAS')
 
 # Membuang kolom yang tidak diperlukan
 data.drop('Unnamed: 0', axis=1, inplace=True)
@@ -33,9 +40,12 @@ data.drop('Teks', axis=1, inplace=True)
 data.drop('Rangkuman', axis=1, inplace=True)
 data.drop('Penulis', axis=1, inplace=True)
 
+data = data.groupby('Judul').first().reset_index()
+
 # Menghapus kata "[DISINFORMASI]" dan "[HOAKS]" pada kolom "Judul"
 data['Judul'] = data['Judul'].str.replace('\[DISINFORMASI\]', '')
 data['Judul'] = data['Judul'].str.replace('\[HOAKS\]', '')
+data['Judul'] = data['Judul'].str.replace('Halaman all', '')
 
 # Melakukan case folding pada teks
 data['Judul'] = data['Judul'].str.lower()
@@ -54,13 +64,23 @@ data['Judul'] = data['Judul'].apply(lambda x: [stemmer.stem(word) for word in x]
 # Menggabungkan token-token menjadi kalimat-kalimat kembali
 data['Judul'] = data['Judul'].apply(' '.join)
 
-# Memisahkan fitur dan label
-X = data['Judul']
+# Inisialisasi objek TfidfVectorizer
+vectorizer = TfidfVectorizer()
+
+# Mengubah teks menjadi vektor TF-IDF
+tfidf_matrix = vectorizer.fit_transform(data['Judul'])
+
+# Pisahkan fitur (TF-IDF) dan label
+X = tfidf_matrix
 y = data['label']
 
-# Membuat TF-IDF vectorizer
-vectorizer = TfidfVectorizer()
-X = vectorizer.fit_transform(X)
+# # Memisahkan fitur dan label
+# X = data['Judul']
+# y = data['label']
+
+# # Membuat TF-IDF vectorizer
+# vectorizer = TfidfVectorizer()
+# X = vectorizer.fit_transform(X)
 
 # Membagi dataset menjadi data latih dan data uji
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -69,7 +89,9 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 knn = KNeighborsClassifier(n_neighbors=1)
 
 # Melatih model KNN
-knn.fit(X, y)
+knn.fit(X_train, y_train)
+
+# knn.fit(X, y)
 
 #Melakukan prediksi pada data uji
 y_pred = knn.predict(X_test)
@@ -84,12 +106,13 @@ def detect_hoax(news_text):
     return prediction[0]
 
 # Tampilan web menggunakan Streamlit
-st.title("Deteksi Berita Hoax BBM dengan Metode KNN")
-news_input = st.text_area("Masukkan teks berita:")
+news_input = st.text_area("Masukkan teks berita :")
 if st.button("Deteksi"):
     if news_input:
         result = detect_hoax(news_input)
-        st.write("Hasil Deteksi: ", result)
-        st.write('Akurasi Model: {:.2f}% '.format(accuracy * 100))
+        with st.spinner('Lagi Loading...'):
+            time.sleep(5)
+        st.write("Hasil Deteksi : ", result)
+        st.write('Hasil Akurasi Model: {:.2f}% '.format(accuracy * 100))
     else:
-        st.warning('Masukkan teks berita terlebih dahulu!')
+        st.warning('Masukkan teks berita terlebih dahulu !')
