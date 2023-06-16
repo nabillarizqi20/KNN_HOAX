@@ -79,7 +79,7 @@ color: #fff;
 </style>"""
 st.markdown(m, unsafe_allow_html=True)
 
-st.title("Deteksi Berita Hoax Bahan Bakar Minyak (BBM) Menggunakan Metode K-Nearst Neighbor")
+st.title(":red[Deteksi Berita Hoax Bahan Bakar Minyak (BBM) Menggunakan Metode K-Nearst Neighbor]")
 
 # Baca dataset berita
 data = pd.read_csv('dataset berita hoax dan bukan hoax.csv')
